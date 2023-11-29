@@ -75,6 +75,8 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -270,14 +272,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "anvara_assessment.users.adapters.AccountAdapter"
-# https://django-allauth.readthedocs.io/en/latest/forms.html
-ACCOUNT_FORMS = {"signup": "anvara_assessment.users.forms.UserSignupForm"}
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "anvara_assessment.users.adapters.SocialAccountAdapter"
-# https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "anvara_assessment.users.forms.UserSocialSignupForm"}
+ACCOUNT_UNIQUE_EMAIL = True
 
 # django-rest-framework
 # -------------------------------------------------------------------------------
@@ -285,10 +280,12 @@ SOCIALACCOUNT_FORMS = {"signup": "anvara_assessment.users.forms.UserSocialSignup
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 15,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
@@ -302,5 +299,17 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
 }
+
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+REST_AUTH = {
+    "USER_DETAILS_SERIALIZER": "anvara_assessment.users.api.serializers.UserSerializer",
+}
+
+
+# dj-rest-auth JWT settings - https://dj-rest-auth.readthedocs.io/en/latest/installation.html
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = "auth-cookie"
+JWT_AUTH_REFRESH_COOKIE = "refresh-cookie"
+OLD_PASSWORD_FIELD_ENABLED = True
