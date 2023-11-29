@@ -1,0 +1,42 @@
+version: '3'
+
+volumes:
+  anvara_assessment_postgres_data: {}
+  anvara_assessment_postgres_data_backups: {}
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: anvara_assessment_django
+    container_name: anvara_assessment_django
+    depends_on:
+      - postgres
+      - mailhog
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - '8000:8000'
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/local/postgres/Dockerfile
+    image: anvara_assessment_postgres
+    container_name: anvara_assessment_postgres
+    volumes:
+      - anvara_assessment_postgres_data:/var/lib/postgresql/data
+      - anvara_assessment_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    container_name: anvara_assessment_mailhog
+    ports:
+      - "8025:8025"
