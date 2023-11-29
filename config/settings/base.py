@@ -83,7 +83,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "anvara_assessment.users",
-    # Your stuff: custom apps go here
+    "anvara_assessment.record",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -300,7 +300,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Anvara Assessment API",
     "DESCRIPTION": "Documentation of API endpoints of Anvara Assessment",
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
